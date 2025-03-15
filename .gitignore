@@ -173,3 +173,5 @@ cython_debug/
 *.zip
 /AugmentedAlzheimerDataset
 *.pth
+/Test_data
+/results
