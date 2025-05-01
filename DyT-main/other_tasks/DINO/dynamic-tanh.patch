@@ -1,0 +1,33 @@
+From c3b4316f39449bcf386d126ad5710b3d130994cc Mon Sep 17 00:00:00 2001
+From: Jiachen Zhu <jiachen.zhu@nyu.edu>
+Date: Wed, 12 Mar 2025 16:28:04 +0000
+Subject: [PATCH] dynamic-tanh
+
+---
+ main_dino.py | 3 +++
+ 1 file changed, 3 insertions(+)
+
+diff --git a/main_dino.py b/main_dino.py
+index cade987..33239f0 100644
+--- a/main_dino.py
++++ b/main_dino.py
+@@ -33,6 +33,7 @@ from torchvision import models as torchvision_models
+ import utils
+ import vision_transformer as vits
+ from vision_transformer import DINOHead
++from dynamic_tanh import convert_ln_to_dyt
+ 
+ torchvision_archs = sorted(name for name in torchvision_models.__dict__
+     if name.islower() and not name.startswith("__")
+@@ -164,6 +165,8 @@ def train_dino(args):
+             drop_path_rate=args.drop_path_rate,  # stochastic depth
+         )
+         teacher = vits.__dict__[args.arch](patch_size=args.patch_size)
++        student = convert_ln_to_dyt(student)
++        teacher = convert_ln_to_dyt(teacher)
+         embed_dim = student.embed_dim
+     # if the network is a XCiT
+     elif args.arch in torch.hub.list("facebookresearch/xcit:main"):
+-- 
+2.34.1
+

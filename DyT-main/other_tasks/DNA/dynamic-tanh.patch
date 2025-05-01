@@ -1,0 +1,34 @@
+From e8a4fd96f43ca22e953ec5053bf65398ba949a6f Mon Sep 17 00:00:00 2001
+From: Jiachen Zhu <jiachen.zhu@nyu.edu>
+Date: Mon, 17 Mar 2025 22:36:03 +0000
+Subject: [PATCH] dynamic-tanh
+
+---
+ train.py | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/train.py b/train.py
+index c49b878..29bf26d 100644
+--- a/train.py
++++ b/train.py
+@@ -33,7 +33,7 @@ import torch.backends
+ 
+ torch.backends.cuda.matmul.allow_tf32 = True
+ torch.backends.cudnn.allow_tf32 = True
+-
++from dynamic_tanh import convert_ln_to_dyt
+ OmegaConf.register_new_resolver('eval', eval)
+ OmegaConf.register_new_resolver('div_up', lambda x, y: (x + y - 1) // y)
+ OmegaConf.register_new_resolver('min', lambda x, y: min([x, y]))
+@@ -202,6 +202,8 @@ class SequenceLightningModule(pl.LightningModule):
+             self.model = utils.instantiate(registry.model, model_hparams)
+         else:
+             self.model = utils.instantiate(registry.model, self.hparams.model)
++        self.model = convert_ln_to_dyt(self.model, alpha_init_value)
++        print(self.model)
+         if (name := self.hparams.train.post_init_hook['_name_']) is not None:
+             kwargs = self.hparams.train.post_init_hook.copy()
+             del kwargs['_name_']
+-- 
+2.34.1
+

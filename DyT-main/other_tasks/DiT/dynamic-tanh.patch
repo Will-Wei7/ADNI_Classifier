@@ -1,0 +1,54 @@
+From 01dc036d356c11ef0cd298de550e2802f928c5f8 Mon Sep 17 00:00:00 2001
+From: Jiachen Zhu <jiachen.zhu@nyu.edu>
+Date: Mon, 17 Mar 2025 19:42:55 +0000
+Subject: [PATCH] dynamic-tanh
+
+---
+ models.py | 10 ----------
+ train.py  |  2 ++
+ 2 files changed, 2 insertions(+), 10 deletions(-)
+
+diff --git a/models.py b/models.py
+index c90eeba..5b0750a 100644
+--- a/models.py
++++ b/models.py
+@@ -204,16 +204,6 @@ class DiT(nn.Module):
+         nn.init.normal_(self.t_embedder.mlp[0].weight, std=0.02)
+         nn.init.normal_(self.t_embedder.mlp[2].weight, std=0.02)
+ 
+-        # Zero-out adaLN modulation layers in DiT blocks:
+-        for block in self.blocks:
+-            nn.init.constant_(block.adaLN_modulation[-1].weight, 0)
+-            nn.init.constant_(block.adaLN_modulation[-1].bias, 0)
+-
+-        # Zero-out output layers:
+-        nn.init.constant_(self.final_layer.adaLN_modulation[-1].weight, 0)
+-        nn.init.constant_(self.final_layer.adaLN_modulation[-1].bias, 0)
+-        nn.init.constant_(self.final_layer.linear.weight, 0)
+-        nn.init.constant_(self.final_layer.linear.bias, 0)
+ 
+     def unpatchify(self, x):
+         """
+diff --git a/train.py b/train.py
+index 3bc8c87..c9e5a24 100644
+--- a/train.py
++++ b/train.py
+@@ -30,6 +30,7 @@ import os
+ from models import DiT_models
+ from diffusion import create_diffusion
+ from diffusers.models import AutoencoderKL
++from dynamic_tanh import convert_ln_to_dyt
+ 
+ 
+ #################################################################################
+@@ -143,6 +144,7 @@ def main(args):
+         input_size=latent_size,
+         num_classes=args.num_classes
+     )
++    model = convert_ln_to_dyt(model)
+     # Note that parameter initialization is done within the DiT constructor
+     ema = deepcopy(model).to(device)  # Create an EMA of the model for use after training
+     requires_grad(ema, False)
+-- 
+2.34.1
+

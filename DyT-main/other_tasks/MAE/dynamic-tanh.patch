@@ -1,0 +1,32 @@
+From ddf89dfd9e9a5e36a16405d18b2f3b3f1c669901 Mon Sep 17 00:00:00 2001
+From: Jiachen Zhu <jiachen.zhu@nyu.edu>
+Date: Thu, 6 Mar 2025 07:26:29 +0000
+Subject: [PATCH] dynamic-tanh
+
+---
+ main_pretrain.py | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/main_pretrain.py b/main_pretrain.py
+index beb7810..f434962 100644
+--- a/main_pretrain.py
++++ b/main_pretrain.py
+@@ -34,6 +34,7 @@ from util.misc import NativeScalerWithGradNormCount as NativeScaler
+ import models_mae
+ 
+ from engine_pretrain import train_one_epoch
++from dynamic_tanh import convert_ln_to_dyt
+ 
+ 
+ def get_args_parser():
+@@ -155,6 +156,7 @@ def main(args):
+     
+     # define the model
+     model = models_mae.__dict__[args.model](norm_pix_loss=args.norm_pix_loss)
++    model = convert_ln_to_dyt(model)
+ 
+     model.to(device)
+ 
+-- 
+2.34.1
+

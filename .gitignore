@@ -1,2 +1,4 @@
 *.pyc
 *.nii
+/ADNI_Dataset
+/AugmentedAlzheimerDataset
