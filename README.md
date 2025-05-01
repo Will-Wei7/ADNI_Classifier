@@ -1,6 +1,6 @@
 # Alzheimer's Disease Classification using Vision Transformer (ViT)
 
-This project implements a deep learning approach to classify Alzheimer's disease stages using brain MRI images from the ADNI (Alzheimer's Disease Neuroimaging Initiative) dataset. The model uses a Vision Transformer (ViT) architecture and includes an implementation of Dynamic Tanh activation function.
+This project implements a deep learning approach to classify Alzheimer's disease stages using brain MRI images from the [ADNI](https://adni.loni.usc.edu/) (Alzheimer's Disease Neuroimaging Initiative) dataset. The model uses a Vision Transformer (ViT) architecture and includes an implementation of Dynamic Tanh activation function.
 
 ## Features
 
